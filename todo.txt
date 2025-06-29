@@ -1,0 +1,5 @@
+1. finish immobilier scraper
+2. update proj structure to ctrl-service-repo structure
+3. implement other scrapers: homegate, flatfox, immoscout
+4. add AI processing layer and context analyzer 
+5. add frontend UI (this will totally happen)
