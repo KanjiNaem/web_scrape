@@ -176,79 +176,78 @@ async fn main() {
     // default test params
     // println!("{:#?}", test_params);
 
+    let test_url = gen_url_base(&test_params).await;
+    // println!("{}", test_url);
+    let page_amount = get_page_amount(test_url.clone()).await;
+    println!("{}", page_amount);
+    let prop_url = get_prop_url(test_url.clone()).await;
+    println!("{}", prop_url);
+
     // modified test params
-    // test_params.rent_amount = (400, 800);
-    // test_params.room_amount = (1.5, 4.5);
-    // test_params.surface = (50, 0);
-    // test_params.area = "zurich".to_owned();
-    // test_params.keywords = vec!["AAAAA".to_owned()];
-    // test_params.new_obj = false;
+    test_params.rent_amount = (400, 800);
+    test_params.room_amount = (1.5, 4.5);
+    test_params.surface = (50, 0);
+    test_params.area = "zurich".to_owned();
+    test_params.keywords = vec!["AAAAA".to_owned()];
+    test_params.new_obj = false;
     // println!("{:#?}", test_params);
 
     let test_url = gen_url_base(&test_params).await;
     // println!("{}", test_url);
-
     let page_amount = get_page_amount(test_url.clone()).await;
     println!("{}", page_amount);
     let prop_url = get_prop_url(test_url.clone()).await;
     println!("{}", prop_url);
 }
 
-// https://www.immobilier.ch/en/rent/apartment/zurich/page-1?t=rent&c=1&p=s126&nb=false base
-// https://www.immobilier.ch/en/rent/apartment/zurich/page-1?t=rent&c=1&p=s126&pn=600&px=800&nb=false  rent_amount
-// https://www.immobilier.ch/en/rent/apartment/zurich/page-1?t=rent&c=1&p=s126&nrn=1&nrx=4&nb=false    room_amount
-// https://www.immobilier.ch/en/rent/apartment/zurich/page-1?t=rent&c=1&p=s126&sn=10&sx=60&nb=false    surface
-// https://www.immobilier.ch/en/rent/apartment/zurich/page-1?t=rent&c=1&p=s126&nb=false&    area
-// https://www.immobilier.ch/en/rent/apartment/zurich/page-1?t=rent&c=1&p=s126&k=XXXXXXX;YYYYYYY;ZZZZZZZ&nb=false keywords
-// https://www.immobilier.ch/en/rent/apartment/zurich/page-1?t=rent&c=1&p=s126&nb=true new_obj
-// https://www.immobilier.ch/en/rent/apartment/zurich/page-1?t=rent&c=1&p=s126&pn=200&px=1800&nrn=1&nrx=4.5&sn=10&sx=90&k=XXXX;YYYY&nb=true
-
 // default out:
+// 25
 // https://www.immobilier.ch/en/rent/apartment/zurich/zurich/homenhancement-2562/modern-1-bedroom-apartment-for-rent-in-zurich-ideal-location-fully-renovated-1259425
-// https://www.immobilier.ch/en/rent/apartment/zurich/bulach/betterhomes-schweiz-ag-611/bright-and-modern-1319959
-// https://www.immobilier.ch/en/rent/apartment/zurich/horgen/wincasa-siege-602/central-living-in-horgen-oberdorf-with-view-of-lake-zurich-1318850
-// https://www.immobilier.ch/en/rent/apartment/zurich/zollikon/schaeppi-grundstucke-ag-808/charming-maisonette-apartment-in-zollikon-for-rent-1318104
-// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/wohnplus-ag-2710/modern-apartment-in-top-location-1318556
-// https://www.immobilier.ch/en/rent/apartment/zurich/adliswil/caisse-pensions-migros-1542/great-apartment-with-charm-right-on-the-sihl-1318474
-// https://www.immobilier.ch/en/rent/apartment/zurich/horgen/livit-ag-real-estate-management-675/spacious-apartment-in-central-location-1320343
-// https://www.immobilier.ch/en/rent/apartment/zurich/fallanden/wincasa-siege-602/charming-property-near-greifensee-1319638
-// https://www.immobilier.ch/en/rent/apartment/zurich/stallikon/privera-ag-gumlingen-969/cozy-45-room-apartment-1317372
-// https://www.immobilier.ch/en/rent/apartment/zurich/kilchberg-zh/wincasa-siege-602/living-experience-on-lake-zurich-1318618
-// https://www.immobilier.ch/en/rent/apartment/zurich/kusnacht-zh/wincasa-siege-602/your-new-home-in-prime-location-in-kusnacht-1318447
-// https://www.immobilier.ch/en/rent/apartment/zurich/kloten/schaeppi-grundstucke-ag-808/fantastic-45-room-new-apartment-1318105
-// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/apleona-schweiz-ag-670/charming-25-room-apartment-in-green-oasis-limited-until-30092027-1317263
-// https://www.immobilier.ch/en/rent/apartment/zurich/regensdorf/livit-ag-real-estate-management-675/penthouse-apartment-in-regensdorf-1317318
-// https://www.immobilier.ch/en/rent/apartment/zurich/oberglatt-zh/livit-ag-real-estate-management-675/high-living-comfort-in-family-friendly-environment-1318030
-// https://www.immobilier.ch/en/rent/apartment/zurich/erlenbach-zh/caisse-pensions-migros-1542/charming-apartment-with-seating-area-limited-until-30062026-1318475
-// https://www.immobilier.ch/en/rent/apartment/zurich/aesch-zh/properti-ag-2229/modernized-15-room-apartment-in-aesch-1317113
-// https://www.immobilier.ch/en/rent/apartment/zurich/volketswil/apleona-schweiz-ag-670/45-room-apartment-in-quiet-development-1318626
-// https://www.immobilier.ch/en/rent/apartment/zurich/oberrieden/apleona-schweiz-ag-670/live-near-lake-zurich-1318633
-// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/livit-ag-real-estate-management-675/city-proximity-amp-comfort-living-with-style-1318722
-// https://www.immobilier.ch/en/rent/apartment/zurich/adliswil/schaeppi-grundstucke-ag-808/spacious-45-room-apartment-in-green-adliswil-for-rent-1318106
-// https://www.immobilier.ch/en/rent/apartment/zurich/pfaffikon-zh/wincasa-siege-602/rent-without-deposit-beautiful-apartment-in-green-surroundings-1318031
-// https://www.immobilier.ch/en/rent/apartment/zurich/fahrweid/privera-ag-gumlingen-969/beautiful-apartment-with-cozy-loggia-1319770
-
-// modified test out:
-// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/homenhancement-2562/modern-1-bedroom-apartment-for-rent-in-zurich-ideal-location-fully-renovated-1259425
-// https://www.immobilier.ch/en/rent/apartment/zurich/schwerzenbach/wincasa-siege-602/looking-for-sunny-apartment-1318032
-// https://www.immobilier.ch/en/rent/apartment/zurich/zollikon/schaeppi-grundstucke-ag-808/charming-maisonette-apartment-in-zollikon-for-rent-1318104
 // https://www.immobilier.ch/en/rent/apartment/zurich/winterthur/wincasa-siege-602/spacious-attic-apartment-rent-without-deposit-1319640
-// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/apleona-schweiz-ag-670/-1317266
-// https://www.immobilier.ch/en/rent/apartment/zurich/adliswil/schaeppi-grundstucke-ag-808/spacious-45-room-apartment-in-green-adliswil-for-rent-1318106
-// https://www.immobilier.ch/en/rent/apartment/zurich/horgen/wincasa-siege-602/central-living-in-horgen-oberdorf-with-view-of-lake-zurich-1318850
+// https://www.immobilier.ch/en/rent/apartment/zurich/zumikon/kornhaus-verwaltungs-ag-regie-immobiliere-475/your-newly-renovated-home-1318862
+// https://www.immobilier.ch/en/rent/apartment/zurich/hinteregg/betterhomes-schweiz-ag-611/holiday-feeling-on-3-floors-with-large-terrace-1317603
 // https://www.immobilier.ch/en/rent/apartment/zurich/zurich/kornhaus-verwaltungs-ag-regie-immobiliere-475/between-the-limmat-and-the-vineyards-living-in-hongg-1318863
-// https://www.immobilier.ch/en/rent/apartment/zurich/horgen/caisse-pensions-migros-1542/35-room-maisonette-apartment-near-the-lake-1319007
+// https://www.immobilier.ch/en/rent/apartment/zurich/meilen/privera-ag-gumlingen-969/your-new-living-space-1318925
+// https://www.immobilier.ch/en/rent/apartment/zurich/niederglatt-zh/properti-ag-2229/charming-35-room-apartment-in-central-location-in-niederglatt-canton-zurich-1317786
+// https://www.immobilier.ch/en/rent/apartment/zurich/volketswil/apleona-schweiz-ag-670/45-room-apartment-in-quiet-development-1318626
+// https://www.immobilier.ch/en/rent/apartment/zurich/winterthur/livit-ag-real-estate-management-675/ideal-single-apartment-with-optimal-transport-connections-1318027
+// https://www.immobilier.ch/en/rent/apartment/zurich/kusnacht-zh/wincasa-siege-602/your-new-home-in-prime-location-in-kusnacht-1318447
+// https://www.immobilier.ch/en/rent/apartment/zurich/seuzach/apleona-schweiz-ag-670/central-single-apartment-with-private-laundry-tower-1318627
+// https://www.immobilier.ch/en/rent/apartment/zurich/opfikon/betterhomes-schweiz-ag-611/luxurious-in-prime-location-1319108
+// https://www.immobilier.ch/en/rent/apartment/zurich/uster/wincasa-siege-602/rent-without-deposit-apartment-in-central-location-1317849
+// https://www.immobilier.ch/en/rent/apartment/zurich/stafa/betterhomes-schweiz-ag-611/neubau-ab-september-2025-1318449
+// https://www.immobilier.ch/en/rent/apartment/zurich/erlenbach-zh/privera-ag-gumlingen-969/your-new-living-space-1318929
+// https://www.immobilier.ch/en/rent/apartment/zurich/zollikerberg/properti-ag-2229/spacious-75-room-maisonette-apartment-with-views-at-zollikerberg-1320369
+// https://www.immobilier.ch/en/rent/apartment/zurich/oberglatt-zh/livit-ag-real-estate-management-675/high-living-comfort-in-family-friendly-environment-1318030
+// https://www.immobilier.ch/en/rent/apartment/zurich/fahrweid/privera-ag-gumlingen-969/beautiful-apartment-with-cozy-loggia-1319770
+// https://www.immobilier.ch/en/rent/apartment/zurich/pfaffikon-zh/wincasa-siege-602/rent-without-deposit-beautiful-apartment-in-green-surroundings-1318031
+// https://www.immobilier.ch/en/rent/apartment/zurich/stallikon/privera-ag-gumlingen-969/cozy-45-room-apartment-1317372
+// https://www.immobilier.ch/en/rent/apartment/zurich/schwerzenbach/wincasa-siege-602/looking-for-sunny-apartment-1318032
+// https://www.immobilier.ch/en/rent/apartment/zurich/oberrieden/apleona-schweiz-ag-670/live-near-lake-zurich-1318633
+// https://www.immobilier.ch/en/rent/apartment/zurich/geroldswil/immosky-ag-1606/ideal-for-senior-living-safe-and-independent-living-1320553
+
+// modified nonsense url out:
+// 25
+// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/homenhancement-2562/modern-1-bedroom-apartment-for-rent-in-zurich-ideal-location-fully-renovated-1259425
+// https://www.immobilier.ch/en/rent/apartment/zurich/winterthur/livit-ag-real-estate-management-675/ideal-single-apartment-with-optimal-transport-connections-1318027
+// https://www.immobilier.ch/en/rent/apartment/zurich/erlenbach-zh/privera-ag-gumlingen-969/your-new-living-space-1318929
+// https://www.immobilier.ch/en/rent/apartment/zurich/stafa/betterhomes-schweiz-ag-611/new-building-from-september-2025-1318410
+// https://www.immobilier.ch/en/rent/apartment/zurich/winterthur/wincasa-siege-602/spacious-attic-apartment-rent-without-deposit-1319640
+// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/kornhaus-verwaltungs-ag-regie-immobiliere-475/cozy-attic-apartment-in-the-heart-of-zurich-1319695
+// https://www.immobilier.ch/en/rent/apartment/zurich/stallikon/privera-ag-gumlingen-969/cozy-45-room-apartment-1317372
+// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/properti-ag-2229/exclusive-pied-terre-office-with-spacious-terrace-in-prime-city-location-in-zurich-1318520
+// https://www.immobilier.ch/en/rent/apartment/zurich/urdorf/livit-ag-real-estate-management-675/apartment-in-family-friendly-development-limited-until-31102027-1319422
 // https://www.immobilier.ch/en/rent/apartment/zurich/zurich/livit-ag-real-estate-management-675/we-are-renting-this-central-and-modern-apartment-in-altstetten-1319668
+// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/apleona-schweiz-ag-670/charming-25-room-apartment-in-green-oasis-limited-until-30092027-1317263
+// https://www.immobilier.ch/en/rent/apartment/zurich/zumikon/kornhaus-verwaltungs-ag-regie-immobiliere-475/your-newly-renovated-home-1318862
+// https://www.immobilier.ch/en/rent/apartment/zurich/opfikon/betterhomes-schweiz-ag-611/luxurious-in-prime-location-1319108
 // https://www.immobilier.ch/en/rent/apartment/zurich/aesch-zh/properti-ag-2229/modernized-15-room-apartment-in-aesch-1317113
 // https://www.immobilier.ch/en/rent/apartment/zurich/regensdorf/livit-ag-real-estate-management-675/penthouse-apartment-in-regensdorf-1317318
-// https://www.immobilier.ch/en/rent/apartment/zurich/winterthur/livit-ag-real-estate-management-675/ideal-single-apartment-with-optimal-transport-connections-1318027
-// https://www.immobilier.ch/en/rent/apartment/zurich/seuzach/apleona-schweiz-ag-670/central-single-apartment-with-private-laundry-tower-1318627
-// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/livit-ag-real-estate-management-675/quietly-located-near-the-university-limited-for-one-year-1318723
-// https://www.immobilier.ch/en/rent/apartment/zurich/horgen/wincasa-siege-602/modern-new-apartment-in-horgen-oberdorf-with-lake-view-1319635
-// https://www.immobilier.ch/en/rent/apartment/zurich/adliswil/livit-ag-real-estate-management-675/beautiful-apartment-in-family-friendly-environment-1317080
-// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/properti-ag-2229/exclusive-pied-terre-office-with-spacious-terrace-in-prime-city-location-in-zurich-1318520
-// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/schaeppi-grundstucke-ag-808/central-oasis-in-district-2-your-new-city-apartment-awaits-1317861
-// https://www.immobilier.ch/en/rent/apartment/zurich/adliswil/caisse-pensions-migros-1542/great-apartment-with-charm-right-on-the-sihl-1318474
+// https://www.immobilier.ch/en/rent/apartment/zurich/stafa/betterhomes-schweiz-ag-611/new-building-from-september-2025-1318439
+// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/betterhomes-schweiz-ag-611/modern-architecture-in-the-green-1319095
+// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/kornhaus-verwaltungs-ag-regie-immobiliere-475/between-the-limmat-and-the-vineyards-living-in-hongg-1318863
+// https://www.immobilier.ch/en/rent/apartment/zurich/zollikerberg/apleona-schweiz-ag-670/living-close-to-nature-not-far-from-the-city-1319615
+// https://www.immobilier.ch/en/rent/apartment/zurich/oberglatt-zh/livit-ag-real-estate-management-675/high-living-comfort-in-family-friendly-environment-1318030
+// https://www.immobilier.ch/en/rent/apartment/zurich/horgen/wincasa-siege-602/central-living-in-horgen-oberdorf-with-view-of-lake-zurich-1318850
+// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/wohnplus-ag-2710/top-renovated-15-room-apartment-1317142
 // https://www.immobilier.ch/en/rent/apartment/zurich/kilchberg-zh/wincasa-siege-602/living-experience-on-lake-zurich-1318618
-// https://www.immobilier.ch/en/rent/apartment/zurich/zurich/schaeppi-grundstucke-ag-808/35-room-apartment-at-sonnenbergstrasse-5-8032-zurich-1318786
-// https://www.immobilier.ch/en/rent/apartment/zurich/fahrweid/privera-ag-gumlingen-969/beautiful-apartment-with-cozy-loggia-1319770
