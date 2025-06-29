@@ -173,7 +173,10 @@ async fn gen_url_base(params: &UrlParams) -> String {
 #[tokio::main]
 async fn main() {
     let mut test_params = UrlParams::default();
+    // default test params
     // println!("{:#?}", test_params);
+
+    // modified test params
     // test_params.rent_amount = (400, 800);
     // test_params.room_amount = (1.5, 4.5);
     // test_params.surface = (50, 0);
