@@ -187,9 +187,6 @@ async fn main() {
 
     let test_url = gen_url_base(&test_params).await;
     // println!("{}", test_url);
-    // https://www.immobilier.ch/en/rent/apartment/zurich/page-1?t=rent&c=1&p=s126&nb=false
-    // https://www.immobilier.ch/en/rent/apartment/zurich/page-1?t=rent&c=1&p=s126&nb=false
-    // https://www.immobilier.ch/en/rent/apartment/zurich/page-1?t=rent&c=1&p=s126&pn=400&px=800&nrn=1.5&nrx=4.5&sn=50&k=AAAAA&nb=false
 
     let page_amount = get_page_amount(test_url.clone()).await;
     println!("{}", page_amount);
