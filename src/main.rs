@@ -1,9 +1,13 @@
+use rand_agents::user_agent;
 use reqwest::Client;
 use scraper::Selector;
 use smart_default::SmartDefault;
 
 async fn get_page_amount(url_str: String) -> i8 {
-    let client = Client::new();
+    let client = Client::builder()
+        .user_agent(gen_rand_user_agent().await)
+        .build()
+        .unwrap();
     let response = client.get(url_str).send().await.unwrap();
 
     let html_content = response.text().await.unwrap();
@@ -34,18 +38,18 @@ async fn get_page_amount(url_str: String) -> i8 {
 }
 
 async fn get_prop_url(url_str: String) -> String {
-    let client = Client::new();
+    let client = Client::builder()
+        .user_agent(gen_rand_user_agent().await)
+        .build()
+        .unwrap();
     let response = client.get(url_str).send().await.unwrap();
 
     let html_content = response.text().await.unwrap();
     let doc = scraper::Html::parse_document(&html_content);
     let prop_selector = scraper::Selector::parse("div.filter-item").unwrap();
-
-    // println!("{:?}", prop_selector);
-
     let html_item = doc.select(&prop_selector);
-    let mut str_result: String = "".to_owned();
 
+    let mut str_result: String = "".to_owned();
     for item in html_item {
         let url_start = "https://www.immobilier.ch";
         let url_end = item
@@ -170,6 +174,12 @@ async fn gen_url_base(params: &UrlParams) -> String {
     return url_result;
 }
 
+async fn gen_rand_user_agent() -> String {
+    let user_agent = user_agent().to_owned();
+    // println!("Random User Agent: {}", user_agent);
+    return user_agent;
+}
+
 #[tokio::main]
 async fn main() {
     let mut test_params = UrlParams::default();
@@ -179,9 +189,9 @@ async fn main() {
     let test_url = gen_url_base(&test_params).await;
     // println!("{}", test_url);
     let page_amount = get_page_amount(test_url.clone()).await;
-    println!("{}", page_amount);
+    // println!("{}", page_amount);
     let prop_url = get_prop_url(test_url.clone()).await;
-    println!("{}", prop_url);
+    // println!("{}", prop_url);
 
     // modified test params
     test_params.rent_amount = (400, 800);
@@ -195,9 +205,9 @@ async fn main() {
     let test_url = gen_url_base(&test_params).await;
     // println!("{}", test_url);
     let page_amount = get_page_amount(test_url.clone()).await;
-    println!("{}", page_amount);
+    // println!("{}", page_amount);
     let prop_url = get_prop_url(test_url.clone()).await;
-    println!("{}", prop_url);
+    // println!("{}", prop_url);
 }
 
 // default out:
@@ -226,7 +236,7 @@ async fn main() {
 // https://www.immobilier.ch/en/rent/apartment/zurich/oberrieden/apleona-schweiz-ag-670/live-near-lake-zurich-1318633
 // https://www.immobilier.ch/en/rent/apartment/zurich/geroldswil/immosky-ag-1606/ideal-for-senior-living-safe-and-independent-living-1320553
 
-// modified nonsense url out:
+// modified nonsense url out (should be nothing, is something, cries):
 // 25
 // https://www.immobilier.ch/en/rent/apartment/zurich/zurich/homenhancement-2562/modern-1-bedroom-apartment-for-rent-in-zurich-ideal-location-fully-renovated-1259425
 // https://www.immobilier.ch/en/rent/apartment/zurich/winterthur/livit-ag-real-estate-management-675/ideal-single-apartment-with-optimal-transport-connections-1318027
